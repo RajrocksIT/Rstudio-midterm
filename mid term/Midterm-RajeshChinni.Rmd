@@ -1,0 +1,122 @@
+---
+title: "Midterm-RajeshChinni"
+output: html_document
+---
+
+```{r}
+# 1. (10 pts) Assuming you have a data set called mydata. Please explain what the following commands will do.
+
+# a - names(mydata) - It shows the column names 
+# b - head([,3]) - It shows first six rows of column 3.
+# c - typeof(mydata) - It determines the class of an object or its internal type. In this case, it can show as 'list'.
+# d - df=data.frame(mydata) - creating a data frame with a name 'df'.
+# e - cbind(mydata, 1:nrow(mydata)) - Adds a new column named "1:nrow(mydata)" to the data set 'mydata' and row values begin with 1 till n for nth row.
+
+```
+
+```{r}
+Oscarawards = read.csv('oscars.CSV',header = TRUE, sep = ',')
+Oscarawards
+```
+
+```{r}
+# 2a - Check if there are any technically correct variables but that don't make sense ? If there are any, explain why  # you think they don't make sense.
+# Ans - After using summary function we get to know that birth month and day are technically correct but dont 
+# make sense because their mean, median and mode does not make any sense.
+
+# 2b - Show the movie(s) that Jack Nicholson won the oscar for?
+jackawards = subset(Oscarawards,name == "Jack Nicholson" )
+jackawards
+
+# 2c - What is the maximum number of oscars won by an actor or actress. Who has the max number of oscars? (Find it #with R commands )
+max(table(Oscarawards$name))
+
+
+# 2d - From the data, create a new variable that shows the year the oscar was given. (Hint: You will need to calculate # it based on what is given in the data)
+sum()
+
+```
+
+```{r}
+# 3a - At what stage of the data preparation process is 'hw_raw.csv'. Please conduct the next steps to get it ready #for analaysis.
+hwraw = read.csv('hw_raw.CSV',header = TRUE, sep = ',')
+hwraw
+# Ans - it is at data cleaning stage as we that there are many missing data in the data set.
+hwraw[row.names(hwraw)[rowSums(is.na(hwraw))>0],colnames(hwraw)[colSums(is.na(hwraw))>0] ]
+mean(hwraw$Age_Wife, na.rm = TRUE)
+mean(hwraw$Age_Husb_at_Marriage, na.rm = TRUE)
+mean(hwraw$Years_Married, na.rm = TRUE)
+mean(hwraw$Age_Wife_At_Marriage, na.rm = TRUE)
+hwraw$Age_Wife[is.na(hwraw$Age_Wife)] = mean(hwraw$Age_Wife, na.rm = TRUE)
+hwraw$Age_Husb_at_Marriage[is.na(hwraw$Age_Husb_at_Marriage)] = mean(hwraw$Age_Husb_at_Marriage, na.rm = TRUE)
+hwraw$Years_Married[is.na(hwraw$Years_Married)] = mean(hwraw$Years_Married, na.rm = TRUE)
+hwraw$Age_Wife_At_Marriage[is.na(hwraw$Age_Wife_At_Marriage)] = mean(hwraw$Age_Wife_At_Marriage, na.rm = TRUE)
+hwraw
+
+```
+
+```{r}
+# 3b - Using the clean data (hw_clean.csv), provide descriptive statistics on one of the numerical variables in the #data.
+cleandata = read.csv('hw_clean.CSV',header = TRUE, sep = ',')
+cleandata
+# I am choosing years_Married
+summary(cleandata$Years_Married)
+
+# 3c - What does the difference between mean and median of Husbands' age at the time of marriage suggest about the age distribution of husbands at the time of marriage?
+mean(cleandata$Age_Husb_at_Marriage)
+median(cleandata$Age_Husb_at_Marriage)
+hist(cleandata$Age_Husb_at_Marriage)
+
+# it shows that the mean is close approximation to the median age of the husbands' getting married. Also, the majority data is around the meand and median values.
+
+# 3d - Using the clean data (hw_clean.csv), show the number of couples that are married less than 20 years and the #number of couples that are married 20 or more years. The result should look like below.
+table(as.numeric(cleandata$Years_Married>=20) )
+
+# 3e - Plot two graphs that show the husbands' and wives' height distributions (you can create two separate graphs). #What do the graphs suggest about the heights of husbands and wives in the sample set? Briefly explain.
+hist(cleandata$Ht_Husband)
+hist(cleandata$Ht_Wife)
+boxplot(cleandata$Ht_Husband)
+boxplot(cleandata$Ht_Wife)
+
+
+# the graphs suggest that they are normally distributed. Aslo there seems no much outliers to affect mean.
+
+```
+
+```{r}
+# 5a - When do we need to transform a variable? Why ?
+# Ans - To achieve normality
+
+# 5b - What percent of a distribution is expected to be between the first quartile (Q1) and the median?
+# Ans - 50%
+
+# 5c - What is a suitable graph for studying relationships between two numerical variables?
+# Ans - XY plot
+
+# 5d - With an example, explain how exploratory analysis is different than hypothesis testing
+# Ans - Hypothesis testing start with a conjecture about what to
+# expect to see from the data (hypothesis). Exploratory Analysis start without any a priori hypotheses. example of #exploratory analysis is studying  graphs and by looking at simple relationships between variables
+
+# 5e - What is the difference between descriptive and predictive analytics?
+
+# Ans - Descriptive Analytics (What has happened?).Find human-interpretable patterns that describe the data.
+# Predictive Analytics (What could happen?)Use some variables to predict unknown or future values of other variables
+```
+
+```{r}
+# 4a - Using the clean data (hw_clean.csv), plot boxplot diagrams for Wives' ages for different Duration categories #('<=20' and '>20') in the dataset. The graph should look like below. What does the graph reveal about the #differences for the wives' ages for the two duration values? What is a plausable explanation for what the graph #reveals ?
+require(lattice)
+require(ggplot2)
+require(datasets)
+#boxplot(~cleandata$Age_Wife | as.factor(cleandata$Duration))
+# 4b - Using the clean data (hw_clean.csv), create a scatterplot with variable of your choosing and try to explain #the graph.
+xyplot(Age_Wife ~ Age_Husband, cleandata)
+# we see from the graph that the same age group couple are getting married.
+
+# 4c - Create a histogram showing the age differences between husbands and wives in the data set. (Hint For this, you #will need to create a new variable that shows the age difference between couples. We expect difference to be always #positive).
+
+#eachageofhus = cleandata[,cleandata$Age_Husband]
+
+# 4d - What is average number of years married for couples such that both husband and wife were less than 20 years old when they got married.
+```
+
